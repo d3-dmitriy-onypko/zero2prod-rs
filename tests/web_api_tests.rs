@@ -1,6 +1,9 @@
 //! tests/health_check.rs
 
 use std::net::TcpListener;
+
+use sqlx::{PgConnection, Connection};
+use zero2prod_rs::configuration::get_configuration;
 #[actix_web::test]
 async fn health_check_works() {
     // Arrange
@@ -22,11 +25,17 @@ async fn health_check_works() {
 async fn subscribe_returns_a_2000_for_valid_form_data() {
     // Arrange
     let app_address = spawn_app();
+    let configuration = get_configuration().expect("Failed to read config");
+    let connection_string = configuration.database.connection_string();
     let client = reqwest::Client::new();
     let body: String = url::form_urlencoded::Serializer::new(
         "name=le guin&email=ursula_le_guin@gmail.com".to_owned(),
     )
     .finish();
+
+    let _ = PgConnection::connect(&connection_string)
+        .await
+        .expect("failed to connect");
 
     let response = client
         .post(format!("{}/subscriptions", &app_address))

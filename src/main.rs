@@ -1,6 +1,6 @@
 use std::net::TcpListener;
 
-use zero2prod_rs::{startup::run, configuration::get_configuration};
+use zero2prod_rs::{configuration::get_configuration, startup::run};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
