@@ -1,0 +1,23 @@
+[package]
+name = "zero2prod-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-http = "3.2.2"
+actix-web = "4.2.1"
+serde = { version = "1.0.151", features = ["derive"] }
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+path = "src/main.rs"
+name = "zero2prod"
+
+[dev-dependencies]
+reqwest = { version = "0.11.13", features = ["json"] }
+tokio = "1.23.0"
+url = "2.3.1"
