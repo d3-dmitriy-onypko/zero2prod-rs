@@ -1,6 +1,6 @@
 //! tests/health_check.rs
 
-use std::{ net::TcpListener};
+use std::net::TcpListener;
 #[actix_web::test]
 async fn health_check_works() {
     // Arrange
@@ -68,7 +68,6 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
         );
     }
 }
-
 
 fn spawn_app() -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("failed");
