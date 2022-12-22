@@ -1,9 +1,11 @@
 use std::net::TcpListener;
 
-use zero2prod_rs::startup::run;
+use zero2prod_rs::{startup::run, configuration::get_configuration};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let listener = TcpListener::bind("127.0.0.1:0").expect("failed");
+    let configuration = get_configuration().expect("Failed to read configuration.");
+    let address = format!("127.0.0.1:{}", configuration.application_port);
+    let listener = TcpListener::bind(address).expect("failed");
     run(listener)?.await
 }
