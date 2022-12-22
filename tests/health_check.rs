@@ -72,7 +72,7 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
 fn spawn_app() -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("failed");
     let port = listener.local_addr().unwrap().port();
-    let server = zero2prod_rs::run(listener).expect("failed");
+    let server = zero2prod_rs::startup::run(listener).expect("failed");
 
     let _ = tokio::spawn(server);
 

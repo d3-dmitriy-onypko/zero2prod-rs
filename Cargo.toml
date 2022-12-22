@@ -8,7 +8,9 @@ edition = "2021"
 [dependencies]
 actix-http = "3.2.2"
 actix-web = "4.2.1"
+config = { version = "0.13.3", features = ["yaml"] }
 serde = { version = "1.0.151", features = ["derive"] }
+sqlx = { version = "0.6.2", features = ["macros", "postgres", "runtime-actix-rustls", "uuid", "chrono", "migrate"] }
 
 [lib]
 path = "src/lib.rs"
