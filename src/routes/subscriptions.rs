@@ -1,5 +1,8 @@
 use actix_web::{web, HttpResponse, Responder};
+
+#[allow(clippy::all)]
 use sqlx::{types::chrono::Utc, PgPool};
+#[allow(clippy::all)]
 use uuid::Uuid;
 
 #[derive(serde::Deserialize)]
