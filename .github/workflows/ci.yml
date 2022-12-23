@@ -87,9 +87,6 @@ jobs:
             --no-default-features
             --locked
 
-      - name: Run Clippy
-        run: cargo clippy --all-targets --all-features
-
       # - name: Run clippy
       #   uses: actions-rs/clippy-check@v1
       #   with:
@@ -100,8 +97,13 @@ jobs:
         run: |
           sudo apt-get install libpq-dev -y
           SKIP_DOCKER=true ./scripts/init_db.sh
+
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features
+
       - name: Run cargo test
         uses: actions-rs/cargo@v1
         with:
           command: test
+          
 
