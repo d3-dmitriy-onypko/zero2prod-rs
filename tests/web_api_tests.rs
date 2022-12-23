@@ -31,8 +31,6 @@ async fn health_check_works() {
 async fn subscribe_returns_a_200_for_valid_form_data() {
     // Arrange
     let TestApp { address, db_pool } = spawn_app().await;
-    let configuration = get_configuration().expect("Failed to read config");
-    let connection_string = configuration.database.connection_string();
     let client = reqwest::Client::new();
     let body: String = url::form_urlencoded::Serializer::new(
         "name=le guin&email=ursula_le_guin@gmail.com".to_owned(),
