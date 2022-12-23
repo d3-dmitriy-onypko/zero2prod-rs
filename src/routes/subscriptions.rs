@@ -1,5 +1,5 @@
 use actix_web::{web, HttpResponse, Responder};
-use sqlx::{types::chrono::Utc, PgConnection, PgPool};
+use sqlx::{types::chrono::Utc, PgPool};
 use uuid::Uuid;
 
 #[derive(serde::Deserialize)]
