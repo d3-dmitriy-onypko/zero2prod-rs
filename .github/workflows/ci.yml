@@ -9,6 +9,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-Dwarnings"
 
 concurrency:
   group: build-${{ github.event.pull_request.number || github.ref }}-ci
@@ -86,11 +87,14 @@ jobs:
             --no-default-features
             --locked
 
-      - name: Run clippy
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: -- -D warnings
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features
+
+      # - name: Run clippy
+      #   uses: actions-rs/clippy-check@v1
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     args: -- -D warnings
 
       - name: Migrate database
         run: |
