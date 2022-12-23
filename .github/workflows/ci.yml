@@ -10,6 +10,10 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+concurrency:
+  group: build-${{ github.event.pull_request.number || github.ref }}-ci
+  cancel-in-progress: true
+
 jobs:
   fmt:
     name: Rustfmt
