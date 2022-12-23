@@ -8,9 +8,11 @@ edition = "2021"
 [dependencies]
 actix-http = "3.2.2"
 actix-web = "4.2.1"
+chrono = "0.4.23"
 config = { version = "0.13.3", features = ["yaml"] }
 serde = { version = "1.0.151", features = ["derive"] }
 sqlx = { version = "0.6.2", features = ["macros", "postgres", "runtime-actix-rustls", "uuid", "chrono", "migrate"] }
+uuid = { version = "1.2.2", features = ["v4"] }
 
 [lib]
 path = "src/lib.rs"
@@ -24,6 +26,7 @@ reqwest = { version = "0.11.13", features = ["json"] }
 rusty-hook = "0.11.2"
 tokio = "1.23.0"
 url = "2.3.1"
+futures = "0.3.25"
 
 [hooks]
 pre-commit = "cargo test"

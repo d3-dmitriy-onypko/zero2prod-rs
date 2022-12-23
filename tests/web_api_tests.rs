@@ -2,12 +2,12 @@
 
 use std::net::TcpListener;
 
-use sqlx::{PgConnection, Connection};
+use sqlx::{Connection, PgConnection, PgPool};
 use zero2prod_rs::configuration::get_configuration;
 #[actix_web::test]
 async fn health_check_works() {
     // Arrange
-    let address = spawn_app();
+    let address = spawn_app().await;
     let client = reqwest::Client::new();
     // Act
     let response = client
@@ -22,9 +22,9 @@ async fn health_check_works() {
 }
 
 #[actix_web::test]
-async fn subscribe_returns_a_2000_for_valid_form_data() {
+async fn subscribe_returns_a_200_for_valid_form_data() {
     // Arrange
-    let app_address = spawn_app();
+    let app_address = spawn_app().await;
     let configuration = get_configuration().expect("Failed to read config");
     let connection_string = configuration.database.connection_string();
     let client = reqwest::Client::new();
@@ -33,7 +33,7 @@ async fn subscribe_returns_a_2000_for_valid_form_data() {
     )
     .finish();
 
-    let _ = PgConnection::connect(&connection_string)
+    let mut connection = PgConnection::connect(&connection_string)
         .await
         .expect("failed to connect");
 
@@ -45,13 +45,21 @@ async fn subscribe_returns_a_2000_for_valid_form_data() {
         .await
         .expect("failed");
 
-    assert_eq!(200, response.status().as_u16())
+    assert_eq!(200, response.status().as_u16());
+
+    let saved = sqlx::query!("SELECT email, name FROM subscriptions",)
+        .fetch_one(&mut connection)
+        .await
+        .expect("failed to fetch subscriptions");
+
+    assert_eq!(saved.email, "ursula_le_guin@gmail.com");
+    assert_eq!(saved.name, "le guin");
 }
 
 #[actix_web::test]
 async fn subscribe_returns_a_400_when_data_is_missing() {
     // Arrange
-    let app_address = spawn_app();
+    let app_address = spawn_app().await;
     let client = reqwest::Client::new();
     let test_cases = vec![
         ("name=le%20guin", "missing the email"),
@@ -78,10 +86,16 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
     }
 }
 
-fn spawn_app() -> String {
+async fn spawn_app() -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("failed");
+    let configuration =
+        zero2prod_rs::configuration::get_configuration().expect("failed to read conf");
+
+    let pool = PgPool::connect(&configuration.database.connection_string())
+        .await
+        .expect("Failed to connect to db");
     let port = listener.local_addr().unwrap().port();
-    let server = zero2prod_rs::startup::run(listener).expect("failed");
+    let server = zero2prod_rs::startup::run(listener, pool).expect("failed");
 
     let _ = tokio::spawn(server);
 
