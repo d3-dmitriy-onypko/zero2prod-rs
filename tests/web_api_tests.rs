@@ -7,7 +7,7 @@ use zero2prod_rs::configuration::get_configuration;
 
 struct TestApp {
     address: String,
-    db_pool: PgPool
+    db_pool: PgPool,
 }
 
 #[actix_web::test]
@@ -103,6 +103,6 @@ async fn spawn_app() -> TestApp {
 
     TestApp {
         address: format!("http://127.0.0.1:{}", port),
-        db_pool
+        db_pool,
     }
 }
