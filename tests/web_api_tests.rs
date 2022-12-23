@@ -2,8 +2,7 @@
 
 use std::net::TcpListener;
 
-use sqlx::{Connection, PgConnection, PgPool};
-use zero2prod_rs::configuration::get_configuration;
+use sqlx::PgPool;
 
 struct TestApp {
     address: String,
