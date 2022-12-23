@@ -94,9 +94,7 @@ jobs:
       #     args: -- -D warnings
 
       - name: Migrate database
-        run: |
-          sudo apt-get install libpq-dev -y
-          SKIP_DOCKER=true ./scripts/init_db.sh
+        run: sqlx database create
 
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features
