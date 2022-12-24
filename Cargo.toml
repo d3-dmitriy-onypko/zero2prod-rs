@@ -8,12 +8,12 @@ edition = "2021"
 [dependencies]
 actix-http = "3.2.2"
 actix-web = "4.2.1"
-chrono = { version = "0.4.23", features = ["time"] }
 config = { version = "0.13.3", features = ["yaml"] }
 env_logger = "0.10.0"
 log = "0.4.17"
 serde = { version = "1.0.151", features = ["derive"] }
-sqlx = { version = "0.6.2", features = ["macros", "postgres", "runtime-actix-rustls", "uuid", "chrono", "migrate"] }
+sqlx = { version = "0.6.2", features = ["macros", "postgres", "runtime-actix-rustls", "uuid", "time", "migrate"] }
+time = "0.3.17"
 tracing = { version = "0.1.37", features = ["log"] }
 tracing-bunyan-formatter = "0.3.4"
 tracing-log = "0.1.3"

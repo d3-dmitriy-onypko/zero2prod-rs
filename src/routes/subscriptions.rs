@@ -30,7 +30,7 @@ pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> im
         Uuid::new_v4(),
         form.email,
         form.name,
-        sqlx::types::chrono::Utc::now()
+        sqlx::types::time::OffsetDateTime::now_utc()
     )
     .execute(pool.get_ref())
     .instrument(query_span)
