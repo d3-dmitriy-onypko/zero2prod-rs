@@ -9,8 +9,6 @@ edition = "2021"
 actix-http = "3.2.2"
 actix-web = "4.2.1"
 config = { version = "0.13.3", features = ["yaml"] }
-env_logger = "0.10.0"
-log = "0.4.17"
 serde = { version = "1.0.151", features = ["derive"] }
 sqlx = { version = "0.6.2", features = ["macros", "postgres", "runtime-actix-rustls", "uuid", "time", "migrate"] }
 time = "0.3.17"
