@@ -85,13 +85,10 @@ jobs:
             --version=${{ env.SQLX_VERSION }}
             --features ${{ env.SQLX_FEATURES }}
             --no-default-features
-            --locked
-
-      # - name: Run clippy
-      #   uses: actions-rs/clippy-check@v1
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     args: -- -D warnings
+            --locked  
+      - name: Check sqlx-data.json is up-to-date
+        run: |
+          cargo sqlx prepare --check -- --bin zero2prod
 
       - name: Migrate database
         run: sqlx migrate run
