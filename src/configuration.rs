@@ -1,10 +1,10 @@
-use config::Config;
+use config::{Config, Environment};
 use secrecy::{ExposeSecret, Secret};
 
 #[derive(serde::Deserialize)]
 pub struct Settings {
     pub database: DatabaseSettings,
-    pub application_port: u16,
+    pub application: ApplicationSettings,
 }
 #[derive(serde::Deserialize)]
 pub struct DatabaseSettings {
@@ -13,6 +13,12 @@ pub struct DatabaseSettings {
     pub port: u16,
     pub host: String,
     pub database_name: String,
+}
+
+#[derive(serde::Deserialize)]
+pub struct ApplicationSettings {
+    pub port: u16,
+    pub host: String,
 }
 
 impl DatabaseSettings {
@@ -39,11 +45,23 @@ impl DatabaseSettings {
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
+    let run_mode: String = std::env::var("APP_ENVIRONMENT")
+        .unwrap_or_else(|_| "local".into())
+        .try_into()
+        .expect("Failed to parse APP_ENVIRONMENT");
     let builder = Config::builder()
         .add_source(config::File::new(
             "configuration.yaml",
             config::FileFormat::Yaml,
         ))
+        .add_source(
+            config::File::new(
+                &format!("configuration.{}.yaml", run_mode),
+                config::FileFormat::Yaml,
+            )
+            .required(false),
+        )
+        .add_source(Environment::with_prefix("app"))
         .build()?;
-    builder.try_deserialize::<Settings>()
+    builder.try_deserialize()
 }

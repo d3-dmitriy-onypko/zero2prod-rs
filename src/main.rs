@@ -12,10 +12,12 @@ async fn main() -> std::io::Result<()> {
     let configuration = get_configuration().expect("Failed to read configuration.");
     let subscriber = get_subscriber("zero2prod_rs".into(), "debug".into(), std::io::stdout);
     init_subscriber(subscriber);
-    let address = format!("127.0.0.1:{}", configuration.application_port);
+    let address = format!(
+        "{}:{}",
+        configuration.application.host, configuration.application.port
+    );
     let listener = TcpListener::bind(address).expect("failed");
-    let pool = PgPool::connect(&configuration.database.connection_string().expose_secret())
-        .await
+    let pool = PgPool::connect_lazy(&configuration.database.connection_string().expose_secret())
         .expect("Failed to connect");
     run(listener, pool)?.await
 }
