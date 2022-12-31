@@ -86,12 +86,13 @@ jobs:
             --features ${{ env.SQLX_FEATURES }}
             --no-default-features
             --locked  
+            
+      - name: Migrate database
+        run: sqlx migrate run
+
       - name: Check sqlx-data.json is up-to-date
         run: |
           cargo sqlx prepare --check -- --bin zero2prod
-
-      - name: Migrate database
-        run: sqlx migrate run
 
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features
