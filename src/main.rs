@@ -1,4 +1,3 @@
-use secrecy::ExposeSecret;
 use sqlx::PgPool;
 use std::net::TcpListener;
 use zero2prod_rs::{
@@ -17,7 +16,6 @@ async fn main() -> std::io::Result<()> {
         configuration.application.host, configuration.application.port
     );
     let listener = TcpListener::bind(address).expect("failed");
-    let pool = PgPool::connect_lazy(configuration.database.connection_string().expose_secret())
-        .expect("Failed to connect");
+    let pool = PgPool::connect_lazy_with(configuration.database.with_db());
     run(listener, pool)?.await
 }

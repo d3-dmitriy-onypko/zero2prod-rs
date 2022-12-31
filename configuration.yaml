@@ -1,5 +1,4 @@
 application:
-  host: 127.0.0.1
   port: 8000
 database:
   host: "localhost"
@@ -7,3 +6,4 @@ database:
   username: "postgres"
   password: "password"
   database_name: "newsletter"
+  require_ssl: false
