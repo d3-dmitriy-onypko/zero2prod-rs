@@ -45,10 +45,7 @@ impl DatabaseSettings {
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
-    let run_mode: String = std::env::var("APP_ENVIRONMENT")
-        .unwrap_or_else(|_| "local".into())
-        .try_into()
-        .expect("Failed to parse APP_ENVIRONMENT");
+    let run_mode: String = std::env::var("APP_ENVIRONMENT").unwrap_or_else(|_| "local".into());
     let builder = Config::builder()
         .add_source(config::File::new(
             "configuration.yaml",
