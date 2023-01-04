@@ -5,7 +5,7 @@ use sqlx::PgPool;
 #[allow(unused, unused_imports)]
 use uuid::Uuid;
 
-use crate::domain::{NewSubscriber, SubscriberName};
+use crate::domain::{new_subscriber::NewSubscriber, subscriber_name::SubscriberName, subsrciber_email::SubscriberEmail};
 
 #[derive(serde::Deserialize)]
 pub struct FormData {
@@ -21,16 +21,23 @@ pub struct FormData {
 )]
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> impl Responder {
     let s = form.into_inner();
+    let Ok(name) = SubscriberName::parse(s.name) else { 
+        return HttpResponse::BadRequest(); 
+    };
+
+    let Ok(email) = SubscriberEmail::parse(s.email) else { 
+        return HttpResponse::BadRequest(); 
+    };
+
     let subscriber = NewSubscriber {
-        name: SubscriberName::parse(s.name),
-        email: s.email,
+        name,
+        email
     };
 
     match insert_subscriber(&pool, &subscriber).await {
         Ok(_) => HttpResponse::Ok(),
         Err(_) => HttpResponse::InternalServerError(),
     }
-    .await
 }
 
 #[tracing::instrument(
@@ -47,7 +54,7 @@ pub async fn insert_subscriber(
     VALUES ($1, $2, $3, $4)
     "#,
         Uuid::new_v4(),
-        new_subscriber.email,
+        new_subscriber.email.as_ref(),
         new_subscriber.name.as_ref(),
         sqlx::types::time::OffsetDateTime::now_utc()
     )
